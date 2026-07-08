@@ -1,0 +1,38 @@
+# Render Blueprint — one-click deploy from the repo.
+# In Render: New + → Blueprint → point at this repo. Everything below is applied.
+#
+# This config targets the FREE plan (no persistent disk). The Excel CRM is seeded
+# on startup and lives on the ephemeral filesystem — perfect for a demo. Call edits
+# reset if the instance restarts. To PERSIST edits, see the commented block at the
+# bottom (requires a paid plan that supports disks).
+services:
+  - type: web
+    name: ai-voice-sales-agent
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      # Leave OPENAI_API_KEY unset to run the built-in rule-based agent (zero cost).
+      # Add it in the Render dashboard (mark as secret) to use a live LLM.
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      - key: COMPANY_NAME
+        value: Nimbus CRM
+      - key: AGENT_NAME
+        value: Aria
+
+# ── Persist CRM edits across restarts (PAID plans only) ──────────────────────
+# Free plans do not support disks. On a paid instance, switch `plan` above to
+# `starter`, then uncomment the `disk` block and the CRM_PATH env var below:
+#
+#      - key: CRM_PATH
+#        value: /var/data/leads.xlsx
+#    disk:
+#      name: crm-data
+#      mountPath: /var/data
+#      sizeGB: 1

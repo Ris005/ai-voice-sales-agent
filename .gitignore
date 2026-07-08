@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+.DS_Store
+# Local CRM edits — keep the seeded template out of accidental commits.
+data/leads.xlsx
+*.xlsx
+!data/.gitkeep

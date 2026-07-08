@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Voice Sales Agent · CRM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📞</text></svg>" />
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">📞</div>
+        <div>
+          <div class="brand-name" id="brandName">Nimbus CRM</div>
+          <div class="brand-sub">AI Voice Sales Agent</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-item active" data-view="leads"><span>📇</span> Leads</button>
+        <button class="nav-item" data-view="knowledge"><span>📚</span> Knowledge Base</button>
+        <button class="nav-item" data-view="about"><span>⚙️</span> How it works</button>
+      </nav>
+
+      <div class="sidebar-foot">
+        <div class="agent-chip">
+          <div class="pulse"></div>
+          <div>
+            <div class="agent-chip-name" id="agentName">Aria</div>
+            <div class="agent-chip-sub" id="backendName">rule-based</div>
+          </div>
+        </div>
+        <a class="download-btn" href="/download/crm">⬇ Download CRM (.xlsx)</a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <!-- LEADS VIEW -->
+      <section class="view" id="view-leads">
+        <header class="topbar">
+          <div>
+            <h1>Leads</h1>
+            <p class="muted">The AI agent calls pending leads and writes results straight back to Excel.</p>
+          </div>
+          <button class="btn-ghost" id="refreshBtn">↻ Refresh</button>
+        </header>
+
+        <div class="stats" id="stats"></div>
+
+        <div class="card table-card">
+          <table class="leads-table">
+            <thead>
+              <tr>
+                <th>Lead</th><th>Company</th><th>Phone</th>
+                <th>Status</th><th>Call Result</th><th>Qualification</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="leadsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- KNOWLEDGE VIEW -->
+      <section class="view hidden" id="view-knowledge">
+        <header class="topbar"><div><h1>Knowledge Base</h1>
+          <p class="muted">The agent answers questions using only these facts.</p></div></header>
+        <div class="card"><pre class="kb" id="kbContent">Loading…</pre></div>
+      </section>
+
+      <!-- ABOUT VIEW -->
+      <section class="view hidden" id="view-about">
+        <header class="topbar"><div><h1>How it works</h1>
+          <p class="muted">End-to-end AI voice sales workflow.</p></div></header>
+        <div class="card about">
+          <ol>
+            <li><b>Read leads from Excel.</b> Only <span class="pill pill-pending">pending</span> leads are called; <span class="pill pill-completed">completed</span> and <span class="pill pill-opted">opted-out</span> are skipped.</li>
+            <li><b>AI voice call.</b> Click <i>Call</i>. The agent speaks aloud (browser voice) and listens with your mic — or you can type the prospect's replies for a mic-free demo.</li>
+            <li><b>Natural sales conversation.</b> The agent introduces the company, qualifies the prospect, answers from the knowledge base, and handles objections.</li>
+            <li><b>Meeting booking.</b> If interested, it collects a day &amp; time and marks the meeting booked.</li>
+            <li><b>Excel CRM update.</b> On <i>End call</i>, call status, qualification, summary, requirements, objections, follow-up and meeting time are written back to the sheet.</li>
+          </ol>
+          <p class="muted small">Set <code>OPENAI_API_KEY</code> to use a live LLM; without it, a built-in rule-based sales brain runs so the app works with zero configuration.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- CALL OVERLAY -->
+  <div class="call-overlay hidden" id="callOverlay">
+    <div class="call-panel">
+      <button class="call-close" id="callClose" title="Close">✕</button>
+
+      <div class="call-head">
+        <div class="avatar" id="callAvatar">A</div>
+        <div>
+          <div class="call-name" id="callName">—</div>
+          <div class="call-company muted" id="callCompany">—</div>
+        </div>
+        <div class="call-timer" id="callTimer">00:00</div>
+      </div>
+
+      <div class="call-status-row">
+        <div class="orb" id="orb"><span></span><span></span><span></span></div>
+        <div class="call-state" id="callState">Ready</div>
+      </div>
+
+      <div class="transcript" id="transcript"></div>
+
+      <div class="call-controls">
+        <div class="input-row">
+          <input type="text" id="replyInput" placeholder="Type the prospect's reply…" autocomplete="off" />
+          <button class="btn-send" id="sendBtn">Send</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn-mic" id="micBtn"><span class="mic-dot"></span> <span id="micLabel">Speak</span></button>
+          <button class="btn-end" id="endBtn">End call</button>
+        </div>
+      </div>
+
+      <!-- Outcome shown after End call -->
+      <div class="outcome hidden" id="outcome"></div>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
